@@ -1,0 +1,42 @@
+TARGET=libtasn1.a
+
+CFLAGS=-m32 -Ilib -Wall -O3 -fPIC -DASN1_BUILDING -DSIZEOF_UNSIGNED_INT=4 -DSIZEOF_UNSIGNED_LONG_INT=4 -Wno-pointer-sign
+
+UNAME := $(shell uname)
+ifeq ($(UNAME), Darwin)
+  check_arch = $(shell if as -arch $(1) -o /dev/null < /dev/null > /dev/null; then echo yes; else echo no; fi)
+  ifeq ($(call check_arch,i386), yes)
+    CFLAGS+=-arch i386
+  endif
+  ifeq ($(call check_arch,ppc), yes)
+    CFLAGS+=-arch ppc
+  endif
+endif
+
+objects= \
+	lib/ASN1.o \
+	lib/coding.o \
+	lib/decoding.o \
+	lib/element.o \
+	lib/errors.o \
+	lib/gstr.o \
+	lib/parser_aux.o \
+	lib/structure.o \
+	lib/version.o \
+	lib/gllib/dummy.o \
+
+ifeq ($(UNAME), Darwin)
+  CFLAGS+=-D_LIBC
+  objects+=lib/gllib/strverscmp.o
+endif
+
+all: $(TARGET)
+
+%.o: %.c
+	$(CC) -o $@ $(CFLAGS) -c $<
+
+$(TARGET): $(objects)
+	$(AR) rcs $(TARGET) $^
+	
+clean:
+	rm -f $(strip $(objects)) $(TARGET)

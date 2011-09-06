@@ -130,6 +130,7 @@ lib/parser_aux.lo
 lib/parser_aux.o
 lib/structure.lo
 lib/structure.o
+lib/version.o
 libtasn1-*.tar.gz
 libtasn1-*.tar.gz.sig
 libtool

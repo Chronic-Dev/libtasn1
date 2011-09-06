@@ -161,3 +161,4 @@ tests/Test_parser.o
 tests/Test_parser_ERROR.asn
 tests/Test_tree
 tests/Test_tree.o
+libtasn1.a

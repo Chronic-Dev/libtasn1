@@ -120,6 +120,7 @@ lib/gllib/arg-nonnull.h
 lib/gllib/dummy.lo
 lib/gllib/dummy.o
 lib/gllib/libgnu.la
+lib/gllib/strverscmp.o
 lib/gllib/warn-on-use.h
 lib/gllib/wchar.h
 lib/gstr.lo

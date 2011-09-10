@@ -1,6 +1,6 @@
 TARGET=libtasn1.a
 
-CFLAGS=-m32 -Ilib -Wall -O3 -fPIC -DASN1_BUILDING -DSIZEOF_UNSIGNED_INT=4 -DSIZEOF_UNSIGNED_LONG_INT=4 -Wno-pointer-sign
+CFLAGS=-m32 -Ilib -Wall -O3 -DASN1_BUILDING -DSIZEOF_UNSIGNED_INT=4 -DSIZEOF_UNSIGNED_LONG_INT=4 -Wno-pointer-sign
 
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
@@ -11,6 +11,24 @@ ifeq ($(UNAME), Darwin)
   ifeq ($(call check_arch,ppc), yes)
     CFLAGS+=-arch ppc
   endif
+  CFLAGS+=-fPIC
+endif
+
+ifeq ($(UNAME), Linux)
+  CFLAGS+=-fPIC
+endif
+
+WIN32=
+ifeq ($(findstring CYG,$(UNAME)), CYG)
+  WIN32=1
+  CC=gcc-3
+endif
+ifeq ($(findstring MINGW,$(UNAME)), MINGW)
+  WIN32=1
+  CC=gcc
+endif
+ifdef WIN32
+  CFLAGS+=-DWIN32
 endif
 
 objects= \
@@ -26,6 +44,11 @@ objects= \
 	lib/gllib/dummy.o \
 
 ifeq ($(UNAME), Darwin)
+  CFLAGS+=-D_LIBC
+  objects+=lib/gllib/strverscmp.o
+endif
+
+ifdef WIN32
   CFLAGS+=-D_LIBC
   objects+=lib/gllib/strverscmp.o
 endif
